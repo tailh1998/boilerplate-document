@@ -1,0 +1,165 @@
+---
+title: Typescript
+description: Rule for the typescript in my project.
+---
+
+Avoid `in-line TypeScript` and type `any` whenever possible.
+
+## Describe your data
+
+You can use TypeScript to describe the shape of objects and functions in your code.
+Using the `any` type is equivalent to opting out of type checking for a variable.
+We recommend that you avoid using `any` in your code.
+Here is an example.
+
+```ts
+type Result = "success" | "failure"
+const verifyResult = (result: Result) => {
+    if (result === "success") {
+        console.log("Passed");
+    } else {
+        console.log("Failed")
+    }
+}
+```
+
+## Use interfaces
+
+An interface is a contract for the class.
+If you create a contract, then your users must comply with the contract.
+In the following example,an interface is used to standardize the `props`
+and ensure that callers provide the expected parameter when using this class.
+
+```ts
+import { Stack, App } from "aws-cdk-lib";
+import { Construct } from "constructs";
+
+interface BucketProps {
+    name: string;
+    region: string;
+    encryption: boolean;
+
+}
+
+class S3Bucket extends Stack {
+    constructor(scope: Construct, props: BucketProps) {
+        super(scope);
+        console.log(props.name);
+
+    }
+}
+const app = App();
+const myS3Bucket = new S3Bucket(app, {
+    name: "my-bucket",
+    region: "us-east-1",
+    encryption: false
+})
+```
+
+Some properties can only be modified when an object is first created.
+You can specify this by putting readonly before the name of the property, as the following example shows.
+
+```ts
+interface Position {
+    readonly latitude: number;
+    readonly longitute: number;
+}
+```
+
+## Avoid empty interfaces
+
+We recommend that you avoid empty interfaces due to the potential risks they create.
+In the following example, there's an empty interface called `BucketProps`.
+The `myS3Bucket1` and `myS3Bucket2` objects are both valid,
+but they follow different standards because the interface doesn’t enforce any contracts.
+The following code will compile and print the properties but this introduces inconsistency in your application.
+
+```ts
+interface BucketProps {}
+
+class S3Bucket implements BucketProps {
+    constructor(props: BucketProps){
+        console.log(props);
+    }
+}
+
+const myS3Bucket1 = new S3Bucket({
+    name: "my-bucket",
+    region: "us-east-1",
+    encryption: false,
+});
+
+const myS3Bucket2 = new S3Bucket({
+    name: "my-bucket",
+});
+```
+
+## Define standard naming conventions
+
+Enforcing a naming convention keeps the code base consistent 
+and reduces overhead when thinking about how to name a variable. 
+We recommend the following:
+
+1. Use camelCase for variable and function names.
+
+2. Use PascalCase for class names and interface names.
+
+3. Use camelCase for interface members.
+
+4. Use PascalCase for type names and enum names.
+
+5. Name files with camelCase (for example, ebsVolumes.tsx or storage.tsb)
+
+## Don't use the var keyword
+
+The `let` statement is used to declare a local variable in TypeScript.
+It's similar to the `var` keyword, but it has some restrictions in scoping compared to the `var` keyword.
+A variable declared in a block with `let` is only available for use within that block.
+The `var` keyword cannot be block-scoped, which means it can be accessed outside a particular block (represented by {}) but not outside of the function it’s defined in.
+You can redeclare and update `var` variables. It's a best practice to `avoid using the var keyword`.
+
+## Use utility types
+
+`Utility types` in TypeScript are predefined type functions that perform transformations and operations on existing types.
+This helps you create new types based on existing types.
+For example, you can change or extract properties, make properties optional or required, or create immutable versions of types.
+By using utility types, you can define more precise types and catch potential errors at compile time.
+
+### `Partial<Type>`
+
+Partial marks all members of an input type Type as optional.
+This utility returns a type that represents all subsets of a given type.
+The following is an example of Partial.
+
+```ts
+interface Dog {
+    name: string;
+    age: number;
+    breed: string;
+    weight: number;
+}
+
+let partialDog: Partial<Dog> = {};
+```
+
+### `Required<Type>`
+
+`Required` does the opposite of `Partial`.
+It makes all members of an input type `Type` non-optional (in other words, required).
+The following is an example of `Required`.
+
+```ts
+interface Dog {
+    name: string;
+    age: number;
+    breed: string;
+    weight?: number;
+}
+
+let dog: Required<Dog> = { 
+    name: "scruffy",
+    age: 5,
+    breed: "labrador",
+    weight 55 // "Required" forces weight to be defined
+};
+```

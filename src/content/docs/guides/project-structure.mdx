@@ -1,0 +1,124 @@
+---
+title: Project Structure
+description: Project Structure - My pet project.
+---
+
+:::tip[Structure My React Apps]
+Folder `src` is an application main source code.
+
+`index.tsx` -  This file is the entry file for the application, only used for setting up stores and wrapping application with providers.
+:::
+
+## Map
+
+```
+your-dir/
+├── README.md                             # Readme file for the whole app
+├── craco.config.js                       # Used to customize the create-react-app configuration
+├── env                                   # All environment variables to be configured from here
+│   └── properties.<environment>.env      # The naming convention of env files
+├── package.json                          # All npm dependencies can be found here
+├── public                                # Public folder
+│   ├── _redirects
+│   ├── favicon
+│   │   └── ...
+│   ├── fonts
+│   │   └── ...
+│   ├── index.html
+│   ├── manifest.json
+│   └── static
+│       └── ...
+├── src                                   # Application main source code
+│   ├── App.tsx                           # Defines routes and containers
+│   ├── index.tsx                         # This file is the entry file for the application, only used for setting up stores and wrapping application with providers.
+│   ├── apis                              # All API endpoints and API related logic goes here
+│   │   └── apiClient.ts
+│   ├── assets                            # Contains static files
+│   │   ├── ...
+│   │   └── index.ts
+│   ├── components                        # Global reusable components
+│   │   ├── @material-extend              # Components that extend Material UI
+│   │   │   ├── ...
+│   │   │   └── index.ts
+│   │   └── ...
+│   ├── constants                         # Folder for constants
+│   │   ├── apiUrl.ts
+│   │   ├── appConfig.ts
+│   │   ├── common.ts
+│   │   ├── commonCodes.ts
+│   │   ├── lengths.ts
+│   │   └── routes.ts
+│   ├── containers
+│   │   └── ...
+│   ├── features                           # Contains pages/modules
+│   │   └── <component_name>
+│   │       └── <epic_name/page_name>
+│   │           ├── apis.ts
+│   │           ├── components
+│   │           │   └── ...
+│   │           ├── constants.ts
+│   │           ├── index.tsx
+│   │           ├── models
+│   │           │   ├── ...
+│   │           │   └── index.ts
+│   │           ├── slices.ts
+│   │           ├── styles.ts
+│   │           └── types.ts
+│   ├── helpers
+│   │   └── ...
+│   ├── hooks                             # Contains custom hooks
+│   │   └── ...
+│   ├── imgs
+│   │   ├── icons
+│   │   │   ├── corpPopover.svg
+│   │   │   └── logo.png
+│   │   ├── image.png
+│   │   └── logo.svg
+│   ├── index.tsx
+│   ├── interfaces                       # Common used interfaces/types
+│   │   └── ...
+│   ├── layouts
+│   │   └── ...
+│   ├── locales                          # Locale translation files
+│   │   ├── en
+│   │   │   ├── ...
+│   │   │   └── index.ts
+│   │   ├── i18n.ts
+│   │   └── kr
+│   │       ├── ...
+│   │       └── index.ts
+│   ├── models                           # Common used `class-transformer` models
+│   │   ├── ...
+│   ├── pages
+│   │   ├── ...
+│   │   └── Page404.tsx
+│   ├── react-app-env.d.ts
+│   ├── reportWebVitals.ts
+│   ├── routes
+│   │   └── index.tsx
+│   ├── store                             # A folder containing all Redux stores
+│   │   ├── errorHandlerSaga.ts           # Handles with error in saga layer
+│   │   ├── index.ts                      # The App's Redux Store
+│   │   ├── rootReducer.ts                # Root reducer for the app
+│   │   └── rootSaga.ts                   # A root Saga aggregates multiple Sagas to a single
+│   ├── theme
+│   │   ├── ...
+│   │   ├── index.tsx
+│   │   ├── overrides
+│   │   │   ├── ...
+│   │   │   └── index.ts
+│   ├── types
+│   │   ├── settings.ts
+│   │   └── theme
+│   │       ├── index.ts
+│   │       └── palette.ts
+│   └── utils                             # A folder for Utility methods and Helpers
+│       └── ...
+├── .eslintrc                             # ESLint configuration file
+├── .prettierrc                           # Prettier config
+├── .gitignore                            # List of ignored files/folders
+├── tsconfig.extend.json
+├── tsconfig.json                         # TypeScript configuration file
+├── yarn-error.log
+└── yarn.lock                             # Yarn lock file for locking the dependency versions
+```

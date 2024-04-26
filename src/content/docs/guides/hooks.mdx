@@ -1,0 +1,98 @@
+---
+title: Custom Hooks
+description: Custom Hooks - My pet project.
+---
+
+Custom hooks for logic sharing between components
+
+## useFetchCommonCode
+
+1. Import `useFetchCommonCode` from `hooks/useFetchCommonCode;`
+
+```typescript
+const commonCodeParams = useMemo(() => ['COMMON_CODE_1', 'COMMON_CODE_2'], []);
+```
+
+:::tip[Note:]
+`COMMON_CODE_1`, `COMMON_CODE_2` should be defined by constant
+:::
+
+2. Get common code list from `useFetchCommonCode()`
+
+```typescript
+const commonCodeList = useFetchCommonCode(commonCodeParams);
+```
+
+## useInjectReducer
+
+Import `{ useInjectReducer }` from `hooks/useInjector;`
+
+:::tip[Note:]
+Inject reducer if it is not in store
+
+Remove reducer when unmounting component
+:::
+
+```typescript
+useInjectReducer({  key: sliceName, reducer: reducer  });
+```
+
+## useInjectSaga
+
+Import `{ useInjectSaga }` from `hooks/useInjector;`
+
+:::tip[Note:]
+A react hook that dynamically injects a saga when the hook is run
+:::
+
+```typescript
+useInjectSaga({
+    key: agentPopupSliceName,
+    saga: agentPopupSaga
+});
+```
+
+## useHookForm
+
+This hook is a customize `useForm` in React Hook Form
+
+Import `useHookForm` from `hooks/useHookForm;`
+
+```typescript
+const hookForm = useHookForm({
+    initialValues,
+    validationSchema,
+    onSubmit
+});
+```
+
+## useLocales
+
+Language configuration and translation text
+
+Import `useLocales` from `hooks/useLocales`;
+
+```typescript
+const { t, onChangeLang, currentLang, allLang } = useLocales();
+```
+
+## useAlert
+
+Show pop-up for yes/no question
+
+Import `{ useAlert }` from `hooks/useAlert`;
+
+```typescript
+const { showAlert } = useAlert();
+
+showAlert({
+    message: 'Hello',
+    onYes: () => { 
+        // Do sth
+    },
+    onNo: () => { 
+        // Do sth
+    },
+    warningOnly?: boolean // Optional, default: false 
+})
+```

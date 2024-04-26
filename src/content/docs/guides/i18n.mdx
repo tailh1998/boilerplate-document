@@ -1,0 +1,82 @@
+---
+title: Internationalization using i18next
+description: Internationalization - My pet project.
+---
+
+Create new translation files and define new key-value in `src/locales` folder if necessary.
+
+To translate text, use [**t()**](https://www.i18next.com/overview/api#t) function.
+
+Usage of `t()` function can be varied in some cases:
+
+## Inside a TSX component
+
+Import `useLocales` from `hooks/useLocales` and use `t()` function directly from that hook:
+
+```ts
+import useLocales from 'hooks/useLocales';
+const SomeComponent = () => {
+    const { t } = useLocales();
+    // ...
+    return <Typography>{t('some.message.key')}</Typography>;
+};
+```
+
+Calling `useLocales` hook also exposes `currentLang` variable which indicates the currently applied language.
+
+## Outside a TSX component
+
+Use `t()` function imported directly from i18next:
+
+```ts
+import i18next from 'i18next';
+
+const someText = i18next.t('some.message.key');
+```
+
+This way of translating is not recommended because `someText` does not updated when current language has been changed.
+
+## Better for code-splitting
+
+For example, when using `yup`'s schema definition:
+
+```ts
+import i18next from 'i18next';
+import * as Yup from 'yup';
+import useHookForm from 'hooks/useHookForm';
+
+import useLocales from 'hooks/useLocales';
+
+const t = i18next.t.bind(i18next);
+
+const getSomeSchema = () => {
+    return Yup.object().shape({
+        someField: Yup.string().required(t('common.error.required', { field: t('some.message.key') }))
+    });
+}
+
+let someSchema = getSomeSchema();
+const SomeComponent = () => {
+    const { currentLang } = useLocales();
+    // Update `someSchema` when `currentLang` changes.
+    useEffect(() => {
+        someSchema = getSomeSchema();
+    }, [currentLang]);
+
+    const hookForm = useHookForm({
+        validationSchema: someSchema
+        // ...
+    });
+    // ...
+};
+```
+
+## How to use `LangText` to map localized labels from API
+
+Use `LangText` component for localized labels sent from Back End.
+
+```ts
+import LangText from 'components/LangText';
+
+<LangText text={name} />;
+```

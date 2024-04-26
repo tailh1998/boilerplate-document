@@ -1,0 +1,161 @@
+---
+title: Usage
+description: Usage - My pet project.
+---
+
+## MUI Components
+
+Learn the basics of working with <a href="https://mui.com/material-ui/getting-started/" target="_blank">Material UI</a> components.
+
+All Material UI components are styled with the <a href="https://mui.com/system/styled/" target="_blank">styled()</a> utility.
+
+This utility is built on top of the styled() module of @mui/styled-engine and provides additional features.
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Decorators
+
+:::tip[Class Transformer]
+Its ES6 and Typescript era.
+
+Nowadays you are working with classes and constructor objects more than ever.
+
+<a href="https://github.com/typestack/class-transformer" target="_blank">Class-transformer</a>
+allows you to transform plain object to some instance of class and versa. 
+
+Also it allows to serialize / deserialize object based on criteria.
+:::
+
+### How to use `class-transformer`
+
+1. Write a class that extends from `BaseModel` class
+
+2. Import `@Expose` from `class-transformer`
+
+3. In your model
+
+```ts
+import BaseModel from 'models/BaseModel';
+import { Expose } from 'class-transformer';
+
+export class SomeModel extends BaseModel {
+    @Expose({ name: 'beName' })
+    feName?: SomeType;
+}
+```
+
+This means `beName` (BE) → `class-transformer` → `feName` (FE)
+
+4. Use `toClass` method to convert to data from BE:
+
+```ts
+const classData = SomeModel.toClass(data);
+```
+
+5. Use `toPlain` method to convert back to data for BE:
+
+```ts
+const plainData = SomeModel.toPlain(data);
+```
+
+For converting BE values to desired FE values (for example `Y`, `N` to `1`, `0`), please do as follows:
+
+```ts
+import  {  Expose,  Transform  }  from  'class-transformer';
+
+@Expose({  name:  'beName'  })
+@Transform((value)  =>  changeToFEValue(value),  { toClassOnly:  true })
+@Transform((value)  =>  changeToBEValue(value),  { toPlainOnly:  true })
+feName;
+```
+
+### How to request Multipart/Form-Data API?
+
+For APIs using `multipart/form-data` content type in the request header to upload files, define model as the following example:
+
+Make sure you have defined the type of attachment fields as `File` or any type extending from `File`:
+
+```ts
+// models
+import MultipartModel from 'models/MultipartModel';
+
+export class SomeMultipartModel extends MultipartModel {
+    @Expose({ name: 'files', toPlainOnly: true })
+    @Transform((item) => item && item.value)
+    files?: File[];
+}
+```
+
+Using `MultipartModel` will help you to skip `toPlain` for `File` types, due to some issues which occurs while using `class-transformer` with complex types.
+When calling API, remember to add `multipartConfig` to the request header:
+
+```ts
+// apis.ts
+import apiClient, { multipartConfig } from 'apis/apiClient';
+
+export const someApi = (params: FormData) => apiClient.post(URL, params, multipartConfig);
+// ...
+```
+
+Then, use `convertToFormData` to convert plained data to `FormData` type before passing the parameters to the API call:
+
+```ts
+// slices.ts
+import  {  convertToFormData  }  from  'utils/helpers';
+
+*someSagaAction(action): any  {
+	// ...
+	yield call(someApi,  convertToFormData(SomeMultipartModel.toPlain(action.payload)));
+	// ...
+}
+```
+
+### Some customized decorators
+
+The following decorators can be used as an alternative to `@Transform` decorator when using `class-transformer`:
+
+1. `TransformDateModel` - used for date/datetime
+
+```ts
+import { TransformDateModel } from 'utils/transformer';
+
+export class TicketFormModel extends MultipartModel {
+    @Expose({ name: 'targetCompDate' })
+    // Instead of defining the lines below ⬇
+    // @Transform((v) => v && dayjs(v.value).format(FULL_DATE_FORMAT), { toClassOnly: true })
+    // @Transform((v) => v && dayjs(v.value).valueOf(), { toPlainOnly: true })
+    // Use this ⬇
+    @TransformDateModel(FULL_DATE_FORMAT)
+    targetCompDate?: number;
+}
+```
+
+2. `TransformArrayModel` - used for arrays
+
+```ts
+import { TransformArrayModel } from 'utils/transformer';
+
+export class TicketListModel extends BaseModel {
+    @Expose({ name: 'content' })
+    // Instead of defining the one right below ⬇
+    // @Transform((item) => item && TicketsFormModel.toClass(item.value))
+    // Use this ⬇
+    @TransformArrayModel(TicketFormModel)
+    ticketList?: Array<Ticket>;
+}
+```
+
+3. `TransformNullModel` - used for null
+
+```ts
+import { TransformNullModel } from 'utils/transformer';
+
+export class TicketListModel extends BaseModel {
+    @Expose({ name: 'fileId' })
+    // Instead of defining the one right below ⬇
+    // @Transform((v) => (isNull(v.value) ? '' : v.value))
+    // Use this ⬇
+    @TransformNullModel()
+    fileId?: string;
+}
+```

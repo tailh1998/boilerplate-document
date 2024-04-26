@@ -1,0 +1,92 @@
+---
+title: Getting Started
+description: Getting Started - My pet project.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+TRELLO is a project built on top of the <a href="https://react.dev/" target="_blank">React</a> framework.
+
+This guide will help you get started with a project. Follow the configuration below 
+
+## Requirements
+
+Check the current Node version to ensure it's **`v16.16.0`**:
+
+<Tabs>
+<TabItem label="Terminal">
+```sh
+node -v
+```
+</TabItem>
+</Tabs>
+
+## Quick Start
+
+After confirming that your environment meets the above [requirements](#requirements), you can start this project by following the steps mentioned below:
+
+### Clone project
+
+Clone a project by running the following command in your terminal:
+
+<Tabs>
+<TabItem label="Terminal">
+```sh
+$ git clone https://mygithub.url.com
+$ cd my-project
+```
+</TabItem>
+</Tabs>
+
+### Install dependencies
+
+Install all dependencies for a project:
+
+:::tip[Package Manager]
+When that's done, install the project dependencies.
+
+It is recommended that you use `Yarn` for deterministic dependency management.
+:::
+
+<Tabs>
+<TabItem label="Terminal">
+```sh
+$ yarn # or yarn install is used to install all dependencies for a project
+```
+</TabItem>
+</Tabs>
+
+### Setup environment for development
+
+Since the project relies on a lot of environment variables,
+one needs to create a copy of the `properties.<environment>.env` file inside `/env` folder and save as .env in the root directory:
+
+<Tabs>
+<TabItem label="Yarn">
+```bash
+copy env/properties.env .env
+```
+</TabItem>
+</Tabs>
+
+### Start the development server
+
+Running the Project
+
+```bash
+$ yarn start # Build the client bundles and start the webpack dev server
+```
+
+This will log a message to your terminal with the URL of your local preview.
+Open this URL to start browsing your site.
+
+:::tip[Tips]
+While developing, you will probably rely mostly on `yarn start`.
+
+However, there are additional scripts at your disposal:
+:::
+
+| `yarn <script>` | Description                                                          |
+| --------------- | -------------------------------------------------------------------- |
+| `yarn start`    | Starts the app at `localhost:3000` by default                        |
+| `yarn build`    | Builds the app in production mode and serves files from build folder |
